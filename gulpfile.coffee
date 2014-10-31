@@ -24,6 +24,8 @@ gulp.task 'jade', ->
 
 
 gulp.task 'watch', ['sass', 'jade'], ->
+  watchify.args.extensions ||= []
+  watchify.args.extensions.push '.coffee'
   bundler = watchify(browserify('./src/js/main.coffee', watchify.args))
   bundler.transform(coffeeify)
   # bundler.transform(glslifyLive)

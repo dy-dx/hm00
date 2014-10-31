@@ -2,7 +2,7 @@
 # _ = require 'lodash'
 THREE = require 'three.js'
 
-fancy = require '../shaders/fancy.coffee'
+fancy = require '../shaders/fancy'
 
 
 scene = new THREE.Scene()
