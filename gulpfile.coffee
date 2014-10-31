@@ -45,6 +45,7 @@ gulp.task 'watch', ['sass', 'jade'], ->
       baseDir: ['.', '.tmp', 'dist']
     port: 3030
     ghostMode: false
+    notify: false
 
   gulp.watch ['src/**/*.scss'], ['sass']
   gulp.watch ['src/**/*.jade'], ['jade']

@@ -1,7 +1,7 @@
 `var glslify = require('glslify');`
 # glslify = require('glslify')
 
-THREE = require('three.js')
+THREE = require('three')
 xtend = require('xtend')
 
 # inline our shader code

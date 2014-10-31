@@ -1,12 +1,33 @@
 # $ = require 'jquery'
 # _ = require 'lodash'
-THREE = require 'three.js'
+THREE = require 'three'
+Stats = require 'stats-js'
+GUI = require('dat-gui').GUI
 testbed = require 'canvas-testbed'
 fancy = require '../shaders/fancy'
 
-time = 0
-renderer = null
-runner = null
+DEBUG = true
+hm = null
+
+if DEBUG
+  stats = new Stats()
+  document.body.appendChild stats.domElement
+
+
+class Ham
+  constructor: (@runner, @canvas)->
+    @time = 0
+    @timeScale = 1
+    @renderer = new THREE.WebGLRenderer(canvas: @canvas, antialias: true)
+    @setupGUI()
+
+  setupGUI: ->
+    @gui = new GUI()
+    @gui.add @, 'timeScale', 0, 5
+
+  tick: (dt) ->
+    @time += dt*0.001*@timeScale
+
 
 scene = new THREE.Scene()
 camera = new THREE.OrthographicCamera 1, 1, 1, 1, -500, 1000
@@ -35,13 +56,19 @@ camera.lookAt scene.position
 
 
 render = (context, width, height, dt) ->
-  time += dt*0.001
+  DEBUG && stats.begin()
+  hm.tick(dt)
+
+  camera.position.x = 300*Math.sin(hm.time)
+  camera.position.z = 300*Math.cos(hm.time)
+
   camera.lookAt scene.position
-  renderer.render scene, camera
+  hm.renderer.render scene, camera
+  DEBUG && stats.end()
 
 
 resize = (width, height) ->
-  renderer.setSize width, height
+  hm.renderer.setSize width, height
   aspectRatio = width/height
   height = 1000
   width = height * aspectRatio
@@ -52,9 +79,8 @@ resize = (width, height) ->
   camera.updateProjectionMatrix()
 
 start = (opts, width, height) ->
-  runner = window.runner = this # canvas-app
-  renderer = new THREE.WebGLRenderer(antialias: true, canvas: opts.canvas)
-  renderer.setClearColor 0xFFFFFF, 1
+  # `this` is canvas-app
+  hm = new Ham(this, opts.canvas)
   resize width, height
 
 
