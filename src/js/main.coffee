@@ -1,21 +1,16 @@
 # $ = require 'jquery'
 # _ = require 'lodash'
 THREE = require 'three.js'
-
+testbed = require 'canvas-testbed'
 fancy = require '../shaders/fancy'
 
+time = 0
+renderer = null
+runner = null
 
 scene = new THREE.Scene()
-aspectRatio = window.innerWidth / window.innerHeight
-height = 1000
-width = height * aspectRatio
-camera = new THREE.OrthographicCamera width/-2, width/2, height/2, height/-2, -500, 1000
-
-renderer = new THREE.WebGLRenderer(antialias: true)
-renderer.setSize window.innerWidth, window.innerHeight
-renderer.setClearColor 0xFFFFFF, 1
-document.getElementById('container').appendChild renderer.domElement
-
+camera = new THREE.OrthographicCamera 1, 1, 1, 1, -500, 1000
+scene.add camera
 
 geometry = new THREE.BoxGeometry 600, 600, 600
 material = new THREE.ShaderMaterial fancy
@@ -37,9 +32,37 @@ camera.position.y = 150
 camera.position.z = 150
 camera.lookAt scene.position
 
-render = ->
-  requestAnimationFrame render
-  timer = Date.now() * 0.002
+
+
+render = (context, width, height, dt) ->
+  time += dt*0.001
+  camera.lookAt scene.position
   renderer.render scene, camera
 
-render()
+
+resize = (width, height) ->
+  renderer.setSize width, height
+  aspectRatio = width/height
+  height = 1000
+  width = height * aspectRatio
+  camera.left = width/-2
+  camera.right = width/2
+  camera.top = height/2
+  camera.bottom = height/-2
+  camera.updateProjectionMatrix()
+
+start = (opts, width, height) ->
+  runner = window.runner = this # canvas-app
+  renderer = new THREE.WebGLRenderer(antialias: true, canvas: opts.canvas)
+  renderer.setClearColor 0xFFFFFF, 1
+  resize width, height
+
+
+testbed render,
+  onReady: start
+  onResize: resize
+  context: 'webgl'
+  canvas: document.createElement('canvas')
+  once: false
+  retina: true
+  resizeDebounce: 100
