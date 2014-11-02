@@ -42,8 +42,8 @@ light = new THREE.PointLight 0xFFFFFF
 scene.add light
 
 light.position.y = 800
-light.position.z = 800
-light.position.x = 800
+light.position.z = 500
+light.position.x = 500
 
 fancyShader = fancy
   lights: true
