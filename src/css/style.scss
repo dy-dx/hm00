@@ -4,3 +4,17 @@ html, body {
   height: 100%;
   overflow: hidden;
 }
+
+#stats {
+  position: absolute;
+}
+#fps {
+  padding-bottom: 0 !important;
+  background: #000 !important;
+}
+#fpsText {
+  color: #eee !important;
+}
+#fpsGraph {
+  display: none;
+}
