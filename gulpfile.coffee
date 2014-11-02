@@ -42,15 +42,15 @@ gulp.task 'watch', ['sass', 'jade'], ->
   browserSync
     open: false
     server:
-      baseDir: ['.', '.tmp', 'dist']
+      baseDir: ['.', 'res', 'dist']
     port: 3030
     ghostMode: false
     notify: false
 
   gulp.watch ['src/**/*.scss'], ['sass']
   gulp.watch ['src/**/*.jade'], ['jade']
-  gulp.watch ['src/img/**/*'],  browserSync.reload
-  gulp.watch ['./dist/*'],      browserSync.reload
+  gulp.watch ['res/**/*'],      browserSync.reload
+  gulp.watch ['dist/*'],        browserSync.reload
 
   return rebundle()
 

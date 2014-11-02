@@ -18,7 +18,7 @@ class Ham
   constructor: (@runner, @canvas)->
     @time = 0
     @timeScale = 1
-    @renderer = new THREE.WebGLRenderer(canvas: @canvas, antialias: true)
+    @renderer = new THREE.WebGLRenderer(canvas: @canvas, antialias: false)
     @setupGUI()
 
   setupGUI: ->
@@ -33,13 +33,10 @@ scene = new THREE.Scene()
 camera = new THREE.OrthographicCamera 1, 1, 1, 1, -500, 1000
 scene.add camera
 
-geometry = new THREE.BoxGeometry 600, 600, 600
-material = new THREE.ShaderMaterial fancy
-    wireframe: false
-    # depthWrite: false
-
-box = new THREE.Mesh geometry, material
-scene.add box
+camera.position.x = 300
+camera.position.y = 150
+camera.position.z = 150
+camera.lookAt scene.position
 
 light = new THREE.PointLight 0xFFFFFF
 scene.add light
@@ -48,10 +45,26 @@ light.position.y = 800
 light.position.z = 800
 light.position.x = 800
 
-camera.position.x = 300
-camera.position.y = 150
-camera.position.z = 150
-camera.lookAt scene.position
+fancyShader = fancy
+  lights: true
+  wireframe: false
+  # depthWrite: false
+fancyShader.uniforms = THREE.UniformsUtils.merge([THREE.UniformsLib['lights'], fancyShader.uniforms])
+material = new THREE.ShaderMaterial fancyShader
+
+loader = new THREE.OBJLoader()
+loader.load 'model/male02.obj', (obj) ->
+  desiredHeight = 800
+  # scale obj to desired height and vertically center at y=0
+  bbox = new THREE.Box3().setFromObject(obj)
+  scale = desiredHeight / (bbox.max.y - bbox.min.y)
+  obj.scale.multiplyScalar(scale)
+  obj.position.y = -desiredHeight/2
+  obj.traverse (child) ->
+    if child instanceof THREE.Mesh
+      child.material = material
+
+  scene.add(obj)
 
 
 
