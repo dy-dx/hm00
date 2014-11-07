@@ -6,6 +6,7 @@ GUI = require('dat-gui').GUI
 testbed = require 'canvas-testbed'
 curlShader = require '../shaders/curl'
 turbulenceShader = require '../shaders/turbulence'
+checkerShader = require '../shaders/checker'
 
 DEBUG = true
 hm = null
@@ -55,7 +56,7 @@ light2.position.set -800, 800,  100
 light3.position.set  800, 700,  800
 light4.position.set -800, 700, -800
 
-shader = turbulenceShader
+shader = checkerShader
   lights: false
   wireframe: false
 
