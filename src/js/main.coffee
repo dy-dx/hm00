@@ -4,6 +4,7 @@ THREE = require 'three'
 Stats = require 'stats-js'
 testbed = require 'canvas-testbed'
 Ham = require './ham'
+audio = require './audio'
 
 DEBUG = true
 
@@ -27,6 +28,7 @@ start = (opts, width, height) ->
   runner = this # canvas-app
   hm.setupRenderer(runner, opts.canvas)
   resize width, height
+  audio.startSound()
 
 onLoad = ->
   testbed render,
@@ -42,5 +44,6 @@ hm = new Ham()
 loader = new THREE.JSONLoader()
 
 loader.load 'res/model/female04low.json', (geom, mats) ->
-  hm.loadModel(geom, mats)
-  onLoad()
+  audio.load 'res/snd/bassically.mp3', ->
+    hm.loadModel(geom, mats)
+    onLoad()
