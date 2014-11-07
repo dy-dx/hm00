@@ -42,6 +42,9 @@ class Audio
   constructor: ->
     @isPlayingAudio = false
     @beatHit = false
+    # we'll fix it later
+    @context = audioContext
+    @source = source
 
   onBeat: ->
     @beatHit = true

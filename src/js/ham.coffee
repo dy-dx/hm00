@@ -1,5 +1,6 @@
 THREE = require 'three'
 GUI = require('dat-gui').GUI
+audio = require './audio'
 shaderCreators =
   curl       : require '../shaders/curl'
   turbulence : require '../shaders/turbulence'
@@ -23,12 +24,12 @@ class Ham
 
   setupScene: ->
     @scene = new THREE.Scene()
-    @camera = new THREE.PerspectiveCamera 70, 1, 1, 1000
+    @camera = new THREE.PerspectiveCamera 70, 1, 1, 2000
     @scene.add @camera
 
     @lights = [
-      new THREE.PointLight 0xFFFFFF, 0.2
-      new THREE.PointLight 0xFFFFFF, 0.2
+      new THREE.PointLight 0xFFFFFF, 0.3
+      new THREE.PointLight 0xFFFFFF, 0.3
       new THREE.PointLight 0xFFFFFF, 0.0
       new THREE.PointLight 0xFFFFFF, 0.0
     ]
@@ -49,13 +50,15 @@ class Ham
 
 
   tick: (dt) ->
-    @dt = dt*0.001*@timeScale
+    # @dt = dt*0.001*@timeScale
+    @dt = audio.context.currentTime - @time
     @time += @dt
     @model.updateAnimation(@dt, @time)
 
   render: ->
     @camera.position.x = 900*Math.sin(@time * @autoRotate)
     @camera.position.z = 900*Math.cos(@time * @autoRotate)
+    @camera.position.y = 200
     @camera.lookAt @scene.position
     @renderer.render @scene, @camera
 
@@ -77,13 +80,15 @@ class Model
 
   setupAnimation: ->
     @animation = new THREE.MorphAnimation(@object)
+    # 100 bpm, 2 beats per animation duration
+    @animation.duration = (1000*60 / 100) * 2
     # I don't know why but this keeps it from blowing up
-    @animation.frames -= 0.00001
+    @animation.frames -= 0.00000001
     @animation.play()
 
   updateAnimation: (dt, time) ->
     @dressMaterial.uniforms.time?.value += dt
-    @animation.update(dt * 1000 * 0.6)
+    @animation.update(dt * 1000)
 
 
 class HamSequencer
