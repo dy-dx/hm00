@@ -67,7 +67,7 @@ material = new THREE.ShaderMaterial shader
 
 morphAnim = null
 loader = new THREE.JSONLoader()
-loader.load 'res/model/female03.json', (geom, mats) ->
+loader.load 'res/model/female04low.json', (geom, mats) ->
   for mat, idx in mats
     if mat.name == 'DRESS.001'
       mats[idx] = material
@@ -92,7 +92,7 @@ render = (context, width, height, ms) ->
   DEBUG && stats.begin()
   dts = hm.tick(ms)
   dtms = dts * 1000
-  shader.uniforms.time.value += dts
+  shader.uniforms.time?.value += dts
   morphAnim.update(dtms*0.6)
 
   camera.position.x = 300*Math.sin(hm.time)
