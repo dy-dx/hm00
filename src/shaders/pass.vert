@@ -12,11 +12,6 @@ void main() {
   vPos = position;
   vNormal = normal;
 
-
-  vec3 objectNormal;
-
-  vec3 transformedNormal = normalMatrix * objectNormal;
-
 #ifdef USE_MORPHTARGETS
   vec3 morphed = vec3( 0.0 );
   morphed += ( morphTarget0 - position ) * morphTargetInfluences[ 0 ];

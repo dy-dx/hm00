@@ -4,7 +4,8 @@ THREE = require 'three'
 Stats = require 'stats-js'
 GUI = require('dat-gui').GUI
 testbed = require 'canvas-testbed'
-fancy = require '../shaders/fancy'
+curlShader = require '../shaders/curl'
+turbulenceShader = require '../shaders/turbulence'
 
 DEBUG = true
 hm = null
@@ -19,6 +20,7 @@ class Ham
     @time = 0
     @timeScale = 1
     @renderer = new THREE.WebGLRenderer(canvas: @canvas, antialias: false)
+    @renderer.setClearColor(0x0, 1)
     @setupGUI()
 
   setupGUI: ->
@@ -26,7 +28,9 @@ class Ham
     @gui.add @, 'timeScale', 0, 5
 
   tick: (dt) ->
-    @time += dt*0.001*@timeScale
+    dt = dt*0.001*@timeScale
+    @time += dt
+    return dt
 
 
 scene = new THREE.Scene()
@@ -38,25 +42,26 @@ camera.position.y = 150
 camera.position.z = 150
 camera.lookAt scene.position
 
-light1 = new THREE.PointLight 0xFFFFFF, 0.7
-light2 = new THREE.PointLight 0xFFFFFF, 0.7
-light3 = new THREE.PointLight 0xFFFFFF, 0.8
-light4 = new THREE.PointLight 0xFFFFFF, 0.8
+light1 = new THREE.PointLight 0xFFFFFF, 0.2
+light2 = new THREE.PointLight 0xFFFFFF, 0.2
+light3 = new THREE.PointLight 0xFFFFFF, 0.3
+light4 = new THREE.PointLight 0xFFFFFF, 0.3
 scene.add light1
 scene.add light2
-scene.add light3
-scene.add light4
+# scene.add light3
+# scene.add light4
 light1.position.set  800, 800, -100
 light2.position.set -800, 800,  100
 light3.position.set  800, 700,  800
 light4.position.set -800, 700, -800
 
-fancyShader = fancy
-  lights: true
+shader = turbulenceShader
+  lights: false
   wireframe: false
-  # depthWrite: false
-fancyShader.uniforms = THREE.UniformsUtils.merge([THREE.UniformsLib['lights'], fancyShader.uniforms])
-material = new THREE.ShaderMaterial fancyShader
+
+if shader.lights
+  shader.uniforms = THREE.UniformsUtils.merge([THREE.UniformsLib['lights'], shader.uniforms])
+material = new THREE.ShaderMaterial shader
 
 
 morphAnim = null
@@ -82,11 +87,12 @@ loader.load 'res/model/female03.json', (geom, mats) ->
 
 
 
-render = (context, width, height, dt) ->
+render = (context, width, height, ms) ->
   DEBUG && stats.begin()
-  hm.tick(dt)
-
-  morphAnim.update(dt/2)
+  dts = hm.tick(ms)
+  dtms = dts * 1000
+  shader.uniforms.time.value += dts
+  morphAnim.update(dtms*0.6)
 
   camera.position.x = 300*Math.sin(hm.time)
   camera.position.z = 300*Math.cos(hm.time)
