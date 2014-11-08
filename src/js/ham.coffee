@@ -1,6 +1,7 @@
 THREE = require 'three'
 GUI = require('dat-gui').GUI
 audio = require './audio'
+particles = require('./particles')
 shaderCreators =
   curl       : require '../shaders/curl'
   turbulence : require '../shaders/turbulence'
@@ -24,7 +25,7 @@ class Ham
 
   setupScene: ->
     @scene = new THREE.Scene()
-    @camera = new THREE.PerspectiveCamera 70, 1, 1, 2000
+    @camera = new THREE.PerspectiveCamera 70, 1, 100, 2000
     @scene.add @camera
 
     @lights = [
@@ -39,6 +40,7 @@ class Ham
     @lights[3].position.set -800, 700, -800
 
     @scene.add light for light in @lights
+    @scene.add particles
 
   setupRenderer: (@runner, @canvas) ->
     @renderer = new THREE.WebGLRenderer(canvas: @canvas, antialias: false)
@@ -53,7 +55,11 @@ class Ham
     # @dt = dt*0.001*@timeScale
     @dt = audio.context.currentTime - @time
     @time += @dt
+    audio.updateAudio()
     @model.updateAnimation(@dt, @time)
+    # fixme
+    c = audio.level * 3
+    particles.material.color.setRGB(c, c, c)
 
   render: ->
     @camera.position.x = 900*Math.sin(@time * @autoRotate)

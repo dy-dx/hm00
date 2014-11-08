@@ -6,8 +6,6 @@
 waveData = []
 # levels of each frequency - from 0 - 1. No sound is 0. Array [levelsCount]
 levelsData = []
-# averaged normalized level from 0 - 1
-level = 0
 
 volSens = 1.0
 beatHoldTime = 18
@@ -42,6 +40,8 @@ class Audio
   constructor: ->
     @isPlayingAudio = false
     @beatHit = false
+    # averaged normalized level from 0 - 1
+    @level = 0
     # we'll fix it later
     @context = audioContext
     @source = source
@@ -80,13 +80,13 @@ class Audio
     # Get average level
     # sum = _.reduce(levelsData, ((a, b) -> a + b), 0)
     sum = levelsData.reduce ((a, b) -> a + b), 0
-    level = sum / levelsCount
+    @level = sum / levelsCount
 
     # Beat Detection
-    if (level > beatCutOff && level > BEAT_MIN)
-      console.log 'beat!', level
+    if (@level > beatCutOff && @level > BEAT_MIN)
+      # console.log 'beat!', @level
       @onBeat()
-      beatCutOff = level * 1.4
+      beatCutOff = @level * 1.4
       beatTime = 0
     else
       if (beatTime <= beatHoldTime)
