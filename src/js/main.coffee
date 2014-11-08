@@ -43,7 +43,8 @@ onLoad = ->
 hm = new Ham()
 loader = new THREE.JSONLoader()
 
+audio.load 'res/snd/bassically.mp3'
+
 loader.load 'res/model/female04low.json', (geom, mats) ->
-  audio.load 'res/snd/bassically.mp3', ->
-    hm.loadModel(geom, mats)
-    onLoad()
+  hm.loadModel(geom, mats)
+  onLoad()

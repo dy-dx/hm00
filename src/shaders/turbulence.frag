@@ -12,6 +12,9 @@ varying vec3 vNormal;
 #pragma glslify: snoise2 = require(glsl-noise/simplex/2d)
 
 float turbulence(vec2 position, float lacunarity, float gain) {
+  vec2 uv = vUv;
+  vec3 normal = vNormal;
+
   float sum = 0.0;
   float scale = 1.0;
   float totalGain = 1.0;

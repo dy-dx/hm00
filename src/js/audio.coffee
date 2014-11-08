@@ -1,6 +1,7 @@
 # Sorry about the mess!
 # I copy-pasted this from an earlier project in a hurry.
 
+AudioControls = require './audiocontrols'
 
 # waveform - from 0 - 1 . no sound is 0.5. Array [binCount]
 waveData = []
@@ -30,31 +31,25 @@ levelBins = Math.floor(binCount / levelsCount) # number of bins in each level
 freqByteData = new Uint8Array(binCount) # bars - bar data is from 0 - 256 in 512 bins. no sound is 0
 timeByteData = new Uint8Array(binCount) # waveform - waveform data is from 0-256 for 512 bins. no sound is 128
 
-# create source
-source = audioContext.createBufferSource()
-source.connect(analyser)
-source.loop = false
-
-
 class Audio
   constructor: ->
-    @isPlayingAudio = false
     @beatHit = false
     # averaged normalized level from 0 - 1
     @level = 0
     # we'll fix it later
     @context = audioContext
-    @source = source
 
   onBeat: ->
     @beatHit = true
 
+  currentTime: ->
+    @controls.audio.currentTime
+
   # Called every frame
   updateAudio: ->
-    return unless @isPlayingAudio
+    return unless @isPlaying()
 
     @beatHit = false
-    # stopSound() if source.context.currentTime > 52
 
     # GET DATA
     analyser.getByteFrequencyData(freqByteData) #<-- bar chart
@@ -95,35 +90,18 @@ class Audio
         beatCutOff *= beatDecayRate
         beatCutOff = Math.max(beatCutOff, BEAT_MIN)
 
+  isPlaying: ->
+    audio = @controls.audio
+    !audio.paused && !audio.ended && audio.currentTime > 0
+
   load: (url, callback) ->
     self = @
-    @stopSound()
-    # Load asynchronously
-    request = new XMLHttpRequest()
-    request.open('GET', url, true)
-    request.responseType = 'arraybuffer'
-    request.onload = ->
-      audioContext.decodeAudioData request.response, (buffer) ->
-        source.buffer = buffer
-        callback()
-      , (e) -> console.error(e)
-    request.send()
-
+    @controls = new AudioControls(url)
+    @source = @context.createMediaElementSource(@controls.audio)
+    @source.connect(analyser)
 
   startSound: ->
-    setTimeout =>
-      @isPlayingAudio = true
-      source.start(0.0)
-
-
-  stopSound: ->
-    @isPlayingAudio = false
-    if (source?.buffer)
-      source.stop()
-      source.disconnect()
-
-
-
+    @controls.play()
 
 audio = new Audio()
 module.exports = audio

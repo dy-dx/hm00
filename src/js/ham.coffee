@@ -20,7 +20,7 @@ class Ham
 
   setupGUI: ->
     @gui = new GUI()
-    @gui.add @, 'timeScale', 0, 5
+    # @gui.add @, 'timeScale', 0, 5
     @gui.add @, 'autoRotate', 0, 2
 
   setupScene: ->
@@ -52,9 +52,8 @@ class Ham
 
 
   tick: (dt) ->
-    # @dt = dt*0.001*@timeScale
-    @dt = audio.context.currentTime - @time
-    @time += @dt
+    @dt = Math.max(audio.currentTime() - @time, 0)
+    @time = audio.currentTime()
     audio.updateAudio()
     @model.updateAnimation(@dt, @time)
     # fixme
