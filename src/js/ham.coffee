@@ -1,12 +1,8 @@
 THREE = require 'three'
 GUI = require('dat-gui').GUI
 audio = require './audio'
-particles = require('./particles')
-shaderCreators =
-  curl       : require '../shaders/curl'
-  turbulence : require '../shaders/turbulence'
-  checker    : require '../shaders/checker'
-
+shaders = require './shaders'
+particles = require './particles'
 
 class Ham
   constructor: ->
@@ -16,7 +12,6 @@ class Ham
 
     @setupScene()
     @setupGUI()
-    @sequencer = new HamSequencer()
 
   setupGUI: ->
     @gui = new GUI()
@@ -25,7 +20,7 @@ class Ham
 
   setupScene: ->
     @scene = new THREE.Scene()
-    @camera = new THREE.PerspectiveCamera 70, 1, 100, 2000
+    @camera = new THREE.PerspectiveCamera 70, 1, 10, 200
     @scene.add @camera
 
     @lights = [
@@ -34,10 +29,10 @@ class Ham
       new THREE.PointLight 0xFFFFFF, 0.0
       new THREE.PointLight 0xFFFFFF, 0.0
     ]
-    @lights[0].position.set  800, 800, -100
-    @lights[1].position.set -800, 800,  100
-    @lights[2].position.set  800, 700,  800
-    @lights[3].position.set -800, 700, -800
+    @lights[0].position.set  80, 80, -10
+    @lights[1].position.set -80, 80,  10
+    @lights[2].position.set  80, 70,  80
+    @lights[3].position.set -80, 70, -80
 
     @scene.add light for light in @lights
     @scene.add particles
@@ -47,7 +42,7 @@ class Ham
     @renderer.setClearColor(0x0, 1)
 
   loadModel: (geom, mats) ->
-    @model = new Model(geom, mats, @sequencer)
+    @model = new Model(geom, mats)
     @scene.add @model.object
 
 
@@ -61,16 +56,16 @@ class Ham
     particles.material.color.setRGB(c, c, c)
 
   render: ->
-    @camera.position.x = 900*Math.sin(@time * @autoRotate)
-    @camera.position.z = 900*Math.cos(@time * @autoRotate)
-    @camera.position.y = 200
+    @camera.position.x = 90*Math.sin(@time * @autoRotate)
+    @camera.position.z = 90*Math.cos(@time * @autoRotate)
+    @camera.position.y = 0
     @camera.lookAt @scene.position
     @renderer.render @scene, @camera
 
 
 class Model
-  constructor: (geom, mats, @sequencer) ->
-    @dressMaterial = new THREE.ShaderMaterial @sequencer.defaultShader()
+  constructor: (geom, mats) ->
+    @dressMaterial = new THREE.ShaderMaterial shaders.default
     for mat, idx in mats
       if mat.name == 'DRESS.001'
         mats[idx] = @dressMaterial
@@ -78,8 +73,8 @@ class Model
       mat.morphTargets = true
 
     @object = new THREE.Mesh geom, new THREE.MeshFaceMaterial mats
-    @object.scale.multiplyScalar(500)
-    @object.position.y = -500
+    @object.scale.multiplyScalar(50)
+    @object.position.y = -50
 
     @setupAnimation()
 
@@ -94,26 +89,5 @@ class Model
   updateAnimation: (dt, time) ->
     @dressMaterial.uniforms.time?.value += dt
     @animation.update(dt * 1000)
-
-
-class HamSequencer
-  constructor: ->
-    @shaders = {}
-    for k, v of shaderCreators
-      @shaders[k] = @createShader(v)
-
-  # ??? What am I doing?
-  createShader: (shaderCreator) ->
-    shader = shaderCreator
-      lights: false
-      wireframe: false
-
-    if shader.lights
-      shader.uniforms = THREE.UniformsUtils.merge([THREE.UniformsLib['lights'], shader.uniforms])
-    return shader
-
-  defaultShader: ->
-    @shaders.checker
-
 
 module.exports = Ham
