@@ -52,8 +52,8 @@ class Ham
     @dt = Math.max(audio.currentTime() - @time, 0)
     @time = audio.currentTime()
     audio.updateAudio()
-    @model.updateAnimation(@dt, @time)
     @choreography.update(@time)
+    @model.updateAnimation(@dt, @time)
     # fixme
     c = audio.level * 3
     particles.material.color.setRGB(c, c, c)

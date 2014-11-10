@@ -8,6 +8,7 @@ setupShader = (shaderCreator) ->
   shader = shaderCreator
     lights: false
     wireframe: false
+    morphTargets: true
 
   if shader.lights
     shader.uniforms = THREE.UniformsUtils.merge([THREE.UniformsLib['lights'], shader.uniforms])

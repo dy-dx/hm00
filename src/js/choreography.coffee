@@ -1,3 +1,5 @@
+shaders = require './shaders'
+
 timeline = [
   name: 'intro'
   beginTime: 0
@@ -12,22 +14,24 @@ for sceneInfo, idx in timeline
 scenes =
   intro:
     init: ->
-      @hm.model.object.position.z = -50
+      @model.setShader shaders.default
+      @model.object.position.z = -50
       @camera.position.x = 0
       @camera.position.z = 90
-      @camera.position.y = @hm.model.center().y
+      @camera.position.y = @model.center().y
     update: (time) ->
-      @hm.model.object.position.z = -50 + 50 * time / @sceneInfo.duration
-      @camera.lookAt @hm.model.center()
+      @model.object.position.z = -50 + 50 * time / @sceneInfo.duration
+      @camera.lookAt @model.center()
 
   verse1rotate:
     init: ->
-      @hm.model.object.position.z = 0
-      @camera.position.y = @hm.model.center().y
+      @model.setShader shaders.turbulence
+      @model.object.position.z = 0
+      @camera.position.y = @model.center().y
     update: (time) ->
       @camera.position.x = 90 * Math.sin(time)
       @camera.position.z = 90 * Math.cos(time)
-      @camera.lookAt @hm.model.center()
+      @camera.lookAt @model.center()
 
 
 module.exports = class Choreography
@@ -68,7 +72,8 @@ module.exports = class Choreography
     scene.sceneInfo = sceneInfo
     scene.camera = @camera
     scene.sceneGraph = @sceneGraph
-    scene.hm = @hm
+    scene.audio = @audio
+    scene.model = @hm.model
     scene.init(@)
     console.log 'starting', sceneInfo.name, 'at', @time
     scene

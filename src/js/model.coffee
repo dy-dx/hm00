@@ -1,13 +1,11 @@
 THREE = require 'three'
-shaders = require './shaders'
 
 module.exports = class Model
   constructor: (geom, mats) ->
-    @dressMaterial = new THREE.ShaderMaterial shaders.default
     for mat, idx in mats
       if mat.name == 'DRESS.001'
-        mats[idx] = @dressMaterial
-        mat = mats[idx]
+        @dressMaterial = mat
+        @dressMaterialIndex = idx
       mat.morphTargets = true
 
     @object = new THREE.Mesh geom, new THREE.MeshFaceMaterial mats
@@ -21,6 +19,13 @@ module.exports = class Model
       @object.position,
       new THREE.Vector3(0, 50, 0)
     )
+
+  setShader: (shader) ->
+    @dressMaterial.dispose()
+    mat = new THREE.ShaderMaterial shader
+    @dressMaterial = mat
+    @object.material.materials[@dressMaterialIndex] = mat
+    return mat
 
   setupAnimation: ->
     @animation = new THREE.MorphAnimation(@object)
