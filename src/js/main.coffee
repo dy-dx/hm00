@@ -1,3 +1,5 @@
+window.DEBUG = true
+
 # $ = require 'jquery'
 # _ = require 'lodash'
 THREE = require 'three'
@@ -6,18 +8,17 @@ testbed = require 'canvas-testbed'
 Ham = require './ham'
 audio = require './audio'
 
-DEBUG = true
 
-if DEBUG
+if window.DEBUG
   stats = new Stats()
   document.body.appendChild stats.domElement
 
 
 render = (context, width, height, ms) ->
-  DEBUG && stats.begin()
+  window.DEBUG && stats.begin()
   hm.tick(ms)
   hm.render()
-  DEBUG && stats.end()
+  window.DEBUG && stats.end()
 
 resize = (width, height) ->
   hm.renderer.setSize width, height
@@ -43,7 +44,7 @@ onLoad = ->
 hm = new Ham()
 loader = new THREE.JSONLoader()
 
-audio.load 'res/snd/bassically.mp3'
+audio.load 'res/snd/mathbonus-fog.ogg'
 
 loader.load 'res/model/female04low.json', (geom, mats) ->
   hm.loadModel(geom, mats)

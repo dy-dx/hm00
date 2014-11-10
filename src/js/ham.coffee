@@ -80,8 +80,9 @@ class Model
 
   setupAnimation: ->
     @animation = new THREE.MorphAnimation(@object)
-    # 100 bpm, 2 beats per animation duration
-    @animation.duration = (1000*60 / 100) * 2
+    # animate at 100 bpm, 2 beats per animation duration
+    # (even though the song is 64bpm)
+    @animation.duration = (1000*60 / 128) * 2
     # I don't know why but this keeps it from blowing up
     @animation.frames -= 0.00000001
     @animation.play()
