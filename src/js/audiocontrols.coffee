@@ -37,4 +37,5 @@ module.exports = class AudioControls
 
     @audio.style.display = ''
     @audio.volume = 1
+    @audio.currentTime = 0.0
     @audio.play()

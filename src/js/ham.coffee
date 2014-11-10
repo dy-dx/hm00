@@ -1,6 +1,7 @@
 THREE = require 'three'
 GUI = require('dat-gui').GUI
 audio = require './audio'
+Choreography = require './choreography'
 shaders = require './shaders'
 particles = require './particles'
 
@@ -12,6 +13,7 @@ class Ham
 
     @setupScene()
     @setupGUI()
+    @choreography = new Choreography(audio, @)
 
   setupGUI: ->
     @gui = new GUI()
@@ -51,15 +53,12 @@ class Ham
     @time = audio.currentTime()
     audio.updateAudio()
     @model.updateAnimation(@dt, @time)
+    @choreography.update(@time)
     # fixme
     c = audio.level * 3
     particles.material.color.setRGB(c, c, c)
 
   render: ->
-    @camera.position.x = 90*Math.sin(@time * @autoRotate)
-    @camera.position.z = 90*Math.cos(@time * @autoRotate)
-    @camera.position.y = 0
-    @camera.lookAt @scene.position
     @renderer.render @scene, @camera
 
 
@@ -78,6 +77,12 @@ class Model
 
     @setupAnimation()
 
+  center: ->
+    new THREE.Vector3().addVectors(
+      @object.position,
+      new THREE.Vector3(0, 50, 0)
+    )
+
   setupAnimation: ->
     @animation = new THREE.MorphAnimation(@object)
     # animate at 100 bpm, 2 beats per animation duration
@@ -91,4 +96,4 @@ class Model
     @dressMaterial.uniforms.time?.value += dt
     @animation.update(dt * 1000)
 
-module.exports = Ham
+module.exports = new Ham()

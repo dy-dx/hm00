@@ -5,7 +5,7 @@ window.DEBUG = true
 THREE = require 'three'
 Stats = require 'stats-js'
 testbed = require 'canvas-testbed'
-Ham = require './ham'
+hm = require './ham'
 audio = require './audio'
 
 
@@ -41,7 +41,6 @@ onLoad = ->
     retina: true
     resizeDebounce: 100
 
-hm = new Ham()
 loader = new THREE.JSONLoader()
 
 audio.load 'res/snd/mathbonus-fog.ogg'
