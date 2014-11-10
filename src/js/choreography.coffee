@@ -15,22 +15,23 @@ scenes =
   intro:
     init: ->
       @model.setShader shaders.default
-      @model.object.position.z = -50
-      @camera.position.x = 0
-      @camera.position.z = 90
-      @camera.position.y = @model.center().y
+      @model.object.position.z = -160
+      @camera.position.x = -5
+      @camera.position.z = 80
+      @camera.position.y = @model.center().y+10
     update: (time) ->
-      @model.object.position.z = -50 + 50 * time / @sceneInfo.duration
+      # Linear from z = -160 to z = 0
+      @model.object.position.z = -160 * (1 - time / @sceneInfo.duration)
       @camera.lookAt @model.center()
 
   verse1rotate:
     init: ->
       @model.setShader shaders.turbulence
       @model.object.position.z = 0
-      @camera.position.y = @model.center().y
+      @camera.position.y = @model.center().y+10
     update: (time) ->
-      @camera.position.x = 90 * Math.sin(time)
-      @camera.position.z = 90 * Math.cos(time)
+      @camera.position.x = 80 * Math.sin(time)
+      @camera.position.z = 80 * Math.cos(time)
       @camera.lookAt @model.center()
 
 

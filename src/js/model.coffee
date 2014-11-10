@@ -6,6 +6,9 @@ module.exports = class Model
       if mat.name == 'DRESS.001'
         @dressMaterial = mat
         @dressMaterialIndex = idx
+      if mat.name == 'eyeball.003'
+        mat.color.setHex 0x333333
+        mat.ambient.setHex 0xAAAAAA
       mat.morphTargets = true
 
     @object = new THREE.Mesh geom, new THREE.MeshFaceMaterial mats
@@ -31,7 +34,7 @@ module.exports = class Model
     @animation = new THREE.MorphAnimation(@object)
     # animate at 100 bpm, 2 beats per animation duration
     # (even though the song is 64bpm)
-    @animation.duration = (1000*60 / 128) * 2
+    @animation.duration = (1000*60 / 100) * 2
     # I don't know why but this keeps it from blowing up
     @animation.frames -= 0.00000001
     @animation.play()

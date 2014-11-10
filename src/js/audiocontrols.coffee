@@ -3,7 +3,7 @@ module.exports = class AudioControls
     @audio = audio = document.createElement 'audio'
     audio.preload = 'auto'
     audio.autoplay = false
-    audio.type = 'audio/mpeg'
+    audio.type = 'audio/ogg'
     @setSrc url if url
     audio.controls = true
     audio.style.position = 'absolute'
@@ -38,5 +38,5 @@ module.exports = class AudioControls
 
     @audio.style.display = ''
     @audio.volume = 1
-    @audio.currentTime = 0.0
+    # @audio.currentTime = 0.0 # breaks firefox
     @audio.play()

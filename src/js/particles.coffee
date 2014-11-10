@@ -6,7 +6,7 @@ pMaterial = new THREE.PointCloudMaterial
   blending: THREE.AdditiveBlending
   transparent: true
 
-for p in [0...3000]
+for p in [0...8000]
   # particle with random position values, -90 -> 90
   pX = Math.random() * 180 - 90
   pY = Math.random() * 180 - 90
