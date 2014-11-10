@@ -14,7 +14,6 @@ beatDecayRate = 0.94
 # minimum volume to trigger a beat
 BEAT_MIN = 0.36
 
-beatHit = false
 beatCutOff = 0
 beatTime = 0
 

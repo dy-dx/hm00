@@ -7,9 +7,10 @@ module.exports = class AudioControls
     @setSrc url if url
     audio.controls = true
     audio.style.position = 'absolute'
-    width = 500
-    audio.style.width = width + 'px'
-    audio.style.left = "calc(50% - #{width/2}px)"
+    # width = 500
+    # audio.style.width = width + 'px'
+    audio.style.width = '100%'
+    # audio.style.left = "calc(50% - #{width/2}px)"
     audio.style.bottom = '25px'
     audio.style.display = 'none'
     audio.style.opacity = 0.5
