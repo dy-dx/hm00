@@ -40,5 +40,4 @@ module.exports = class Model
     @animation.play()
 
   updateAnimation: (dt, time) ->
-    @dressMaterial.uniforms.time?.value += dt
     @animation.update(dt * 1000)

@@ -2,6 +2,7 @@ shaderCreators =
   curl       : require '../shaders/curl'
   turbulence : require '../shaders/turbulence'
   checker    : require '../shaders/checker'
+  stripes    : require '../shaders/stripes'
 
 
 setupShader = (shaderCreator) ->

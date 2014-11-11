@@ -26,8 +26,8 @@ class Ham
     @scene.add @camera
 
     @lights = [
-      new THREE.PointLight 0xFFFFFF, 0.2
-      new THREE.PointLight 0xFFFFFF, 0.2
+      new THREE.PointLight 0xFFFFFF, 0.1
+      new THREE.PointLight 0xFFFFFF, 0.1
       new THREE.PointLight 0xFFFFFF, 0.0
       new THREE.PointLight 0xFFFFFF, 0.0
     ]
@@ -54,9 +54,6 @@ class Ham
     audio.updateAudio()
     @choreography.update(@time)
     @model.updateAnimation(@dt, @time)
-    # fixme
-    c = audio.level * 3
-    particles.material.color.setRGB(c, c, c)
 
   render: ->
     @renderer.render @scene, @camera
