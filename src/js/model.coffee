@@ -20,7 +20,7 @@ module.exports = class Model
   center: ->
     new THREE.Vector3().addVectors(
       @object.position,
-      new THREE.Vector3(0, 50, 0)
+      new THREE.Vector3(0, 55, 0)
     )
 
   setShader: (shader) ->

@@ -22,7 +22,7 @@ class Ham
 
   setupScene: ->
     @scene = new THREE.Scene()
-    @camera = new THREE.PerspectiveCamera 70, 1, 10, 1000
+    @camera = new THREE.PerspectiveCamera 70, 1, 30, 1000
     @scene.add @camera
 
     @lights = [

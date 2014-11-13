@@ -2,8 +2,11 @@
   precision highp float;
 #endif
 
+#define PI 3.1415926535897932384626433832795
+
 uniform float time;
 uniform float brightness;
+uniform float balance;
 varying vec2 vUv;
 varying vec3 vPos;
 varying vec3 vNormal;
@@ -23,10 +26,12 @@ void main() {
 
 
   // stripes
-  float offset = -0.20 * cos(time / 2.0);
-  float width = 0.20;
+  float width = 0.16; // how wide is each pair (period)
+  // float balance = 0.90; // 0.5 == 50/50 black and white
+  float offset = -0.4 * cos(max(0.0, time - 2.5));
 
-  float stripe = sign(sin( (vPos.y + offset) / (width / 4.0) ));
+  float stripe = sin((p.y + offset)*2.0*PI/width) * 0.5 + balance;
+  stripe = smoothstep(0.50, 0.51, stripe);
   vec3 col = vec3(stripe);
 
   gl_FragColor = vec4(col, 1.0) * brightness;

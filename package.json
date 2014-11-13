@@ -17,6 +17,7 @@
   , "coffee-script": "1.8.0"
   , "coffeeify": "0.7.0"
   , "dat-gui": "0.5.0"
+  , "eases" : "1.0.2"
   , "glsl-curl-noise": "0.0.4"
   , "glsl-noise": "0.0.0"
   , "glslify": "1.6.0"
